@@ -15,8 +15,6 @@
 from telethon import events, Button
 from ethon.teleutils import mention
 from ethon.mystarts import vc_menu
-from pyrogram import Client, filters, enums, __version__ as pyrogram_version
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaDocument
 
 from .. import Drone, ACCESS_CHANNEL, AUTH_USERS
 
@@ -24,30 +22,15 @@ from main.plugins.actions import set_thumbnail, rem_thumbnail, heroku_restart
 from LOCAL.localisation import START_TEXT as st
 from LOCAL.localisation import info_text, spam_notice, help_text, DEV, source_text, SUPPORT_LINK
 
-
-main_buttons = [[
-        InlineKeyboardButton('📞 ᴅᴇᴠᴇʟᴏᴘᴇʀ ', url='https://t.me/NY_BoTx')
-        ],[
-        InlineKeyboardButton('📜 sᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ ', url='https://t.me/NY_BoTxDiscussion'),
-        InlineKeyboardButton('🤖 ᴜᴘᴅᴀᴛᴇ ᴄʜᴀɴɴᴇʟ  ', url='https://t.me/NY_BoTx_updates')
-        ],[
-        InlineKeyboardButton('🙋‍♂️ ʜᴇʟᴘ', callback_data='help'),
-        InlineKeyboardButton('💁‍♂️ ᴀʙᴏᴜᴛ ', callback_data='about')
-        ],[
-        InlineKeyboardButton('⚙️ sᴇᴛᴛɪɴɢs ⚙️', callback_data='settings#main')
-        ]]
-#===================Start Function===================#
-
-@Client.on_message(filters.private & filters.command(['start']))
-async def start(client, message):
-    user = message.from_user
-    if not await db.is_user_exist(user.id):
-      await db.add_user(user.id, user.first_name)
-    reply_markup = InlineKeyboardMarkup(main_buttons)
-    await client.send_message(
-        chat_id=message.chat.id,
-        reply_markup=InlineKeyboardMarkup(main_buttons),
-        text=Translation.START_TXT.format(message.from_user.first_name))
+@Drone.on(events.NewMessage(incoming=True, pattern="/start"))
+async def start(event):
+    await event.reply(f'{st}', 
+                      buttons=[
+                              [Button.inline("⚙️ sᴇᴛᴛɪɴɢs ⚙️", data="menu")]
+                              ])
+    tag = f'[{event.sender.first_name}](tg://user?id={event.sender_id})'
+    await Drone.send_message(int(ACCESS_CHANNEL), f'{tag} started the BOT')
+    
 @Drone.on(events.callbackquery.CallbackQuery(data="menu"))
 async def menu(event):
     await vc_menu(event)
