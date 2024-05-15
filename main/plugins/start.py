@@ -25,12 +25,17 @@ from LOCAL.localisation import info_text, spam_notice, help_text, DEV, source_te
 @Drone.on(events.NewMessage(incoming=True, pattern="/start"))
 async def start(event):
     await event.reply(f'{st}', 
-                      buttons=[
-                              [
-                              Button.inline("Menu.", data="menu")
-                              Button.inline('🔌 ᴀᴅᴅ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ɢʀᴏᴜᴘ 💻', url=f'http://t.me/{temp.U_NAME}?startgroup=true')
-                              ]
-                              ])
+                main_buttons = [[
+        InlineKeyboardButton('📞 ᴅᴇᴠᴇʟᴏᴘᴇʀ ', url='https://t.me/NY_BoTx')
+        ],[
+        InlineKeyboardButton('📜 sᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ ', url='https://t.me/NY_BoTxDiscussion'),
+        InlineKeyboardButton('🤖 ᴜᴘᴅᴀᴛᴇ ᴄʜᴀɴɴᴇʟ  ', url='https://t.me/NY_BoTx_updates')
+        ],[
+        InlineKeyboardButton('🙋‍♂️ ʜᴇʟᴘ', callback_data='menu'),
+        InlineKeyboardButton('💁‍♂️ ᴀʙᴏᴜᴛ ', callback_data='about')
+        ],[
+        InlineKeyboardButton('⚙️ sᴇᴛᴛɪɴɢs ⚙️', callback_data='settings#main')
+        ]]
     tag = f'[{event.sender.first_name}](tg://user?id={event.sender_id})'
     await Drone.send_message(int(ACCESS_CHANNEL), f'{tag} started the BOT')
     
